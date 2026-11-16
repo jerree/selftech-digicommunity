@@ -38,8 +38,8 @@ function ProgramsHero() {
     <section id="top" className="relative overflow-hidden bg-bone pt-[74px] programs-hero">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         <div className="grid-lines absolute inset-0 [clip-path:inset(74px_0_0_0)]" />
-        <div className="absolute -left-24 -top-24 size-[28rem] rounded-full bg-blue-soft blur-[120px]" />
-        <div className="absolute -right-24 bottom-0 size-[24rem] rounded-full bg-green/10 blur-[110px]" />
+        <div className="absolute -left-24 -top-24 size-[28rem] glow [--glow:var(--color-blue-soft)]" />
+        <div className="absolute -right-24 bottom-0 size-[24rem] glow [--glow:color-mix(in_oklab,var(--color-green)_10%,transparent)]" />
       </div>
       <div className="container-page relative pb-14 pt-6 lg:pb-20 lg:pt-8">
         <Reveal>
@@ -284,11 +284,11 @@ function ProgramCta() {
         <div className="grain relative overflow-hidden rounded-[2rem] bg-ink px-7 py-12 text-cream sm:px-10 lg:px-14 lg:py-16">
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute -right-20 -top-24 size-[24rem] rounded-full bg-blue/20 blur-[110px]"
+            className="pointer-events-none absolute -right-20 -top-24 size-[24rem] glow [--glow:color-mix(in_oklab,var(--color-blue)_20%,transparent)]"
           />
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute -bottom-28 left-1/4 size-[20rem] rounded-full bg-green/15 blur-[100px]"
+            className="pointer-events-none absolute -bottom-28 left-1/4 size-[20rem] glow [--glow:color-mix(in_oklab,var(--color-green)_15%,transparent)]"
           />
           <div className="relative grid gap-10 lg:grid-cols-12 lg:items-end">
             <div className="lg:col-span-8">

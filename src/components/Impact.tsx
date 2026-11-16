@@ -9,8 +9,8 @@ export function Impact() {
     <section id="impact" className="grain relative overflow-hidden bg-ink py-20 text-cream lg:py-28">
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute left-1/2 top-0 h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-cream/25 to-transparent" />
-        <div className="absolute -right-32 top-10 size-[30rem] rounded-full bg-blue/20 blur-[130px]" />
-        <div className="absolute -bottom-40 -left-24 size-[26rem] rounded-full bg-green/15 blur-[120px]" />
+        <div className="absolute -right-32 top-10 size-[30rem] glow [--glow:color-mix(in_oklab,var(--color-blue)_20%,transparent)]" />
+        <div className="absolute -bottom-40 -left-24 size-[26rem] glow [--glow:color-mix(in_oklab,var(--color-green)_15%,transparent)]" />
       </div>
 
       <div className="container-page relative">

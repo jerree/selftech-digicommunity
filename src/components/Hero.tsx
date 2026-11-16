@@ -29,8 +29,8 @@ export function Hero() {
     <section id="top" ref={ref} className="relative overflow-hidden bg-bone pt-[74px]">
       <div className="pointer-events-none absolute inset-0">
         <div className="grid-lines absolute inset-0" />
-        <div className="absolute -top-40 right-[-10%] size-[38rem] rounded-full bg-blue/10 blur-[120px]" />
-        <div className="absolute bottom-[-20%] left-[-5%] size-[30rem] rounded-full bg-green/10 blur-[110px]" />
+        <div className="absolute -top-40 right-[-10%] size-[38rem] glow [--glow:color-mix(in_oklab,var(--color-blue)_10%,transparent)]" />
+        <div className="absolute bottom-[-20%] left-[-5%] size-[30rem] glow [--glow:color-mix(in_oklab,var(--color-green)_10%,transparent)]" />
       </div>
 
       <div className="relative border-b border-ink/10 bg-ink text-cream">
@@ -150,7 +150,7 @@ export function Hero() {
                       what comes next.
                     </p>
                   </div>
-                  <span className="grid size-11 shrink-0 place-items-center rounded-full border border-cream/25 bg-white/10 backdrop-blur-md">
+                  <span className="grid size-11 shrink-0 place-items-center rounded-full border border-cream/25 bg-white/10">
                     <ArrowDown className="size-4 -rotate-45 text-cream" />
                   </span>
                 </div>
@@ -178,7 +178,7 @@ export function Hero() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 0.95, ease: [0.16, 1, 0.3, 1] }}
                 style={reduce ? undefined : { y: badgeY }}
-                className="absolute -right-2 top-8 z-20 w-[12.5rem] rounded-2xl border border-ink/10 bg-cream/95 p-4 shadow-[0_20px_50px_-20px_rgba(7,23,47,0.35)] backdrop-blur-md sm:-right-6"
+                className="absolute -right-2 top-8 z-20 w-[12.5rem] rounded-2xl border border-ink/10 bg-cream/95 p-4 shadow-[0_20px_50px_-20px_rgba(7,23,47,0.35)] sm:-right-6"
               >
                 <div className="flex items-center gap-2">
                   <span className="flex shrink-0 -space-x-2">

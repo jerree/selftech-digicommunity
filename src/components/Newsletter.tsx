@@ -33,8 +33,8 @@ export function Newsletter() {
           id="join"
           className="grain relative overflow-hidden rounded-[2rem] bg-ink text-cream"
         >
-          <div className="pointer-events-none absolute -left-24 -top-24 size-[26rem] rounded-full bg-blue/25 blur-[120px]" />
-          <div className="pointer-events-none absolute -bottom-32 right-1/3 size-[24rem] rounded-full bg-green/15 blur-[110px]" />
+          <div className="pointer-events-none absolute -left-24 -top-24 size-[26rem] glow [--glow:color-mix(in_oklab,var(--color-blue)_25%,transparent)]" />
+          <div className="pointer-events-none absolute -bottom-32 right-1/3 size-[24rem] glow [--glow:color-mix(in_oklab,var(--color-green)_15%,transparent)]" />
 
           <div className="relative grid lg:grid-cols-[1.15fr_0.85fr]">
             <div className="p-7 sm:p-10 lg:p-14">
@@ -112,12 +112,12 @@ export function Newsletter() {
                     <span>
                       I agree that Selftech DigiCommunity may store and use these details to
                       respond to me, as described in the{" "}
-                      <a
-                        href="/privacy"
+                      <Link
+                        to="/privacy"
                         className="text-cream/75 underline underline-offset-2 hover:text-cream"
                       >
                         privacy policy
-                      </a>
+                      </Link>
                       .
                     </span>
                   </label>

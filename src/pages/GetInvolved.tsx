@@ -70,8 +70,8 @@ function InvolvedHero({ onStart }: { onStart: () => void }) {
     <section id="top" className="relative overflow-hidden bg-bone pt-[74px]">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         <div className="grid-lines absolute inset-0 [clip-path:inset(74px_0_0_0)]" />
-        <div className="absolute -left-24 -top-24 size-[28rem] rounded-full bg-blue-soft blur-[120px]" />
-        <div className="absolute -right-24 bottom-0 size-[24rem] rounded-full bg-green/10 blur-[110px]" />
+        <div className="absolute -left-24 -top-24 size-[28rem] glow [--glow:var(--color-blue-soft)]" />
+        <div className="absolute -right-24 bottom-0 size-[24rem] glow [--glow:color-mix(in_oklab,var(--color-green)_10%,transparent)]" />
       </div>
 
       <div className="container-page relative pb-14 pt-6 lg:pb-20 lg:pt-8">
@@ -124,13 +124,13 @@ function InvolvedHero({ onStart }: { onStart: () => void }) {
           <Reveal delay={0.2} y={30} className="lg:col-span-5">
             <figure className="relative overflow-hidden rounded-[1.75rem]">
               <img
-                src="/assets/community.jpg"
-                alt="A Selftech trainer helping an older woman use a smartphone"
-                width={1200}
-                height={912}
+                src="/assets/get-involved.webp"
+                alt="Attendees applauding during a community training event"
+                width={1600}
+                height={1067}
                 className="aspect-[4/3.2] w-full object-cover"
               />
-              <figcaption className="absolute bottom-4 left-4 right-4 max-w-[19rem] rounded-2xl bg-ink/90 px-4 py-3 text-cream backdrop-blur">
+              <figcaption className="absolute bottom-4 left-4 right-4 max-w-[19rem] rounded-2xl bg-ink/90 px-4 py-3 text-cream">
                 <span className="block text-[0.65rem] font-bold uppercase tracking-[0.2em] text-cream/55">
                   In the community
                 </span>

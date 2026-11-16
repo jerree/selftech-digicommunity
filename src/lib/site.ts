@@ -454,7 +454,7 @@ export const resources: Resource[] = [];
  * Entries with an empty href are hidden.
  */
 export const socials = [
-  { label: "Instagram", href: "" },
-  { label: "Facebook", href: "" },
+  { label: "Instagram", href: "https://www.instagram.com/selftechdigicommunity/" },
+  { label: "Facebook", href: "https://www.facebook.com/share/1ExDeG9Kdi/" },
   { label: "LinkedIn", href: "" },
 ];

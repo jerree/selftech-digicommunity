@@ -72,8 +72,8 @@ function AboutHero() {
     <section id="top" className="relative overflow-hidden bg-bone pt-[74px]">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         <div className="grid-lines absolute inset-0 [clip-path:inset(74px_0_0_0)]" />
-        <div className="absolute -right-32 -top-24 size-[30rem] rounded-full bg-blue-soft blur-[120px]" />
-        <div className="absolute -left-24 bottom-0 size-[24rem] rounded-full bg-green/10 blur-[110px]" />
+        <div className="absolute -right-32 -top-24 size-[30rem] glow [--glow:var(--color-blue-soft)]" />
+        <div className="absolute -left-24 bottom-0 size-[24rem] glow [--glow:color-mix(in_oklab,var(--color-green)_10%,transparent)]" />
       </div>
       <div className="container-page relative pb-14 pt-6 lg:pb-20 lg:pt-8">
         <Reveal>
@@ -120,8 +120,8 @@ function AboutHero() {
               <div className="group relative overflow-hidden rounded-[2rem] bg-ink shadow-[0_40px_80px_-40px_rgba(7,23,47,0.55)]">
                 <div className="aspect-[4/3] sm:aspect-[16/9] lg:aspect-square">
                   <img
-                    src="/assets/community.jpg"
-                    alt="A volunteer helping an older woman use a smartphone"
+                    src="/assets/about-top.webp"
+                    alt="A trainer helping an older man use a laptop at a table by a window"
                     className="size-full object-cover transition-transform duration-[1.4s] ease-expo group-hover:scale-[1.04]"
                     loading="eager"
                   />
@@ -208,8 +208,10 @@ function Story() {
           <Reveal delay={0.16} className="mt-10">
             <div className="group relative overflow-hidden rounded-2xl bg-ink">
               <img
-                src="/assets/hero.jpg"
-                alt="Young learners and an educator working together on laptops"
+                src="/assets/about-bottom.webp"
+                loading="lazy"
+                decoding="async"
+                alt="Young men attending a training session in a bright, modern classroom"
                 className="aspect-[16/9] w-full object-cover opacity-90 transition-transform duration-[1.4s] ease-expo group-hover:scale-[1.04]"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-ink/75 via-transparent to-transparent" />
@@ -324,11 +326,11 @@ function Values() {
     <section id="values" className="grain relative overflow-hidden bg-ink py-20 text-cream lg:py-28">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -left-40 top-10 size-[28rem] rounded-full bg-blue/15 blur-[130px]"
+        className="pointer-events-none absolute -left-40 top-10 size-[28rem] glow [--glow:color-mix(in_oklab,var(--color-blue)_15%,transparent)]"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -right-24 bottom-0 size-[24rem] rounded-full bg-green/10 blur-[110px]"
+        className="pointer-events-none absolute -right-24 bottom-0 size-[24rem] glow [--glow:color-mix(in_oklab,var(--color-green)_10%,transparent)]"
       />
       <div className="container-page relative">
         <div className="grid gap-8 lg:grid-cols-12 lg:items-end">

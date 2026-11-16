@@ -10,6 +10,7 @@ import TrainingAndEvents from "./pages/TrainingAndEvents";
 import ResourcesPage from "./pages/Resources";
 import GetInvolvedPage from "./pages/GetInvolved";
 import ContactPage from "./pages/Contact";
+import { PrivacyPage, TermsPage } from "./pages/Legal";
 import NotFound from "./pages/NotFound";
 import { Route, Routes } from "react-router-dom";
 
@@ -34,6 +35,8 @@ export default function App() {
         <Route path="/resources" element={<ResourcesPage />} />
         <Route path="/training-events" element={<TrainingAndEvents />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
+        <Route path="/terms" element={<TermsPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />

@@ -60,8 +60,8 @@ function ContactHero() {
     <section id="top" className="relative overflow-hidden bg-bone pt-[74px]">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         <div className="grid-lines absolute inset-0 [clip-path:inset(74px_0_0_0)]" />
-        <div className="absolute -left-24 -top-24 size-[28rem] rounded-full bg-blue-soft blur-[120px]" />
-        <div className="absolute -right-24 bottom-0 size-[24rem] rounded-full bg-green/10 blur-[110px]" />
+        <div className="absolute -left-24 -top-24 size-[28rem] glow [--glow:var(--color-blue-soft)]" />
+        <div className="absolute -right-24 bottom-0 size-[24rem] glow [--glow:color-mix(in_oklab,var(--color-green)_10%,transparent)]" />
       </div>
 
       <div className="container-page relative pb-14 pt-6 lg:pb-20 lg:pt-8">

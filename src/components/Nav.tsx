@@ -180,7 +180,7 @@ export function Nav() {
       <div
         className={`transition-all duration-500 ${
           scrolled || open
-            ? "border-b border-ink/10 bg-cream/80 backdrop-blur-xl"
+            ? "border-b border-ink/10 bg-cream/95"
             : "border-b border-transparent bg-transparent"
         }`}
       >
