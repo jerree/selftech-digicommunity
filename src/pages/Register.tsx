@@ -15,6 +15,8 @@ import { Action } from "../components/ui/Action";
 import { Eyebrow } from "../components/ui/SectionHeading";
 import { Reveal, RevealLines } from "../components/ui/Reveal";
 import { usePageMeta } from "../lib/usePageMeta";
+import { submitRegistration } from "../lib/backend";
+import { usePublishedEvents } from "../lib/content";
 
 const formats = ["In-person workshops", "Online sessions", "Hybrid cohorts"];
 const levels = ["Complete beginner", "Some experience", "Confident user"];
@@ -239,6 +241,8 @@ function RegisterSection({
   const [values, setValues] = useState<Values>({ ...empty, program: programTitle });
   const [errors, setErrors] = useState<Errors>({});
   const [result, setResult] = useState<{ number: string; values: Values } | null>(null);
+  const [pending, setPending] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const [copied, setCopied] = useState(false);
   const resultRef = useRef<HTMLDivElement>(null);
 
@@ -251,9 +255,10 @@ function RegisterSection({
   const update = <K extends keyof Values>(key: K, value: Values[K]) => {
     setValues((current) => ({ ...current, [key]: value }));
     setErrors((current) => (current[key] ? { ...current, [key]: undefined } : current));
+    setSubmitError("");
   };
 
-  const submit = (event: React.FormEvent) => {
+  const submit = async (event: React.FormEvent) => {
     event.preventDefault();
     const next: Errors = {};
 
@@ -278,8 +283,15 @@ function RegisterSection({
       return;
     }
 
-    const number = `SDC-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
-    setResult({ number, values: { ...values } });
+    setPending(true);
+    setSubmitError("");
+    const response = await submitRegistration(values);
+    setPending(false);
+    if (!response.ok || !response.reference) {
+      setSubmitError(response.ok ? "We could not create your registration number. Please try again." : response.message);
+      return;
+    }
+    setResult({ number: response.reference, values: { ...values } });
   };
 
   const reset = () => {
@@ -578,9 +590,10 @@ function RegisterSection({
                     <div className="mt-2 flex flex-wrap items-center gap-4 sm:col-span-2">
                       <button
                         type="submit"
-                        className="group inline-flex items-center gap-3 rounded-full bg-ink py-2 pl-6 pr-2 text-[0.92rem] font-semibold tracking-tight text-cream transition-colors duration-500 hover:bg-ink-2"
+                        disabled={pending}
+                        className="group inline-flex items-center gap-3 rounded-full bg-ink py-2 pl-6 pr-2 text-[0.92rem] font-semibold tracking-tight text-cream transition-colors duration-500 hover:bg-ink-2 disabled:cursor-wait disabled:opacity-70"
                       >
-                        Submit registration
+                        {pending ? "Submitting…" : "Submit registration"}
                         <span className="grid size-9 place-items-center rounded-full bg-white/12 transition-transform duration-500 ease-expo group-hover:rotate-45">
                           <ArrowUpRight className="size-4" />
                         </span>
@@ -589,6 +602,12 @@ function RegisterSection({
                         Takes a few minutes. No account needed.
                       </p>
                     </div>
+
+                    {submitError && (
+                      <p role="alert" className="text-[0.82rem] font-semibold text-[#b03a2e] sm:col-span-2">
+                        {submitError}
+                      </p>
+                    )}
                   </div>
                 </form>
               )}
@@ -602,6 +621,15 @@ function RegisterSection({
 
 function UpcomingEvents({ programTitle }: { programTitle: string }) {
   const selected = programs.find((program) => program.title === programTitle);
+  const events = usePublishedEvents();
+  const now = new Date();
+  const todayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(
+    now.getDate()
+  ).padStart(2, "0")}`;
+  const upcoming = (events ?? [])
+    .filter((event) => event.date >= todayKey)
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .slice(0, 3);
 
   return (
     <section id="events" className="bg-bone py-16 lg:py-24">
@@ -627,19 +655,56 @@ function UpcomingEvents({ programTitle }: { programTitle: string }) {
           </Reveal>
 
           <Reveal delay={0.08} className="lg:col-span-7">
-            <div className="rounded-[1.75rem] border border-dashed border-ink/20 bg-cream p-7 sm:p-9">
-              <span className="grid size-12 place-items-center rounded-xl bg-white text-ink/40 ring-1 ring-ink/10">
-                <CalendarDays className="size-5" strokeWidth={1.8} />
-              </span>
-              <p className="mt-6 font-display text-[1.3rem] font-semibold tracking-tight text-ink">
-                No events scheduled
-              </p>
-              <p className="mt-2 max-w-md text-[0.88rem] leading-relaxed text-ink/55">
-                {selected
-                  ? `Upcoming sessions for ${selected.title} will be listed here.`
-                  : "Upcoming sessions will be listed here."}
-              </p>
-            </div>
+            {upcoming.length === 0 ? (
+              <div className="rounded-[1.75rem] border border-dashed border-ink/20 bg-cream p-7 sm:p-9">
+                <span className="grid size-12 place-items-center rounded-xl bg-white text-ink/40 ring-1 ring-ink/10">
+                  <CalendarDays className="size-5" strokeWidth={1.8} />
+                </span>
+                <p className="mt-6 font-display text-[1.3rem] font-semibold tracking-tight text-ink">
+                  No events scheduled
+                </p>
+                <p className="mt-2 max-w-md text-[0.88rem] leading-relaxed text-ink/55">
+                  {selected
+                    ? `Upcoming sessions for ${selected.title} will be listed here.`
+                    : "Upcoming sessions will be listed here."}
+                </p>
+              </div>
+            ) : (
+              <ul className="space-y-3">
+                {upcoming.map((event) => {
+                  const date = new Date(`${event.date}T00:00:00`);
+                  return (
+                    <li key={event.id}>
+                      <Link
+                        to="/training-events"
+                        className="group flex items-center gap-4 rounded-2xl border border-ink/10 bg-white p-4 transition-colors hover:border-ink/30 sm:p-5"
+                      >
+                        <span className="flex h-16 w-16 shrink-0 flex-col items-center justify-center rounded-xl bg-ink text-cream">
+                          <span className="font-display text-[1.5rem] font-semibold leading-none tabular-nums">
+                            {date.getDate()}
+                          </span>
+                          <span className="mt-1 text-[0.62rem] font-bold uppercase tracking-[0.16em] text-cream/60">
+                            {date.toLocaleDateString("en-GB", { month: "short" })}
+                          </span>
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="block text-[0.7rem] font-bold uppercase tracking-[0.14em] text-green-deep">
+                            {event.kind} · {event.format}
+                          </span>
+                          <span className="mt-1 block font-display text-[1.08rem] font-semibold leading-snug tracking-tight text-ink">
+                            {event.title}
+                          </span>
+                          <span className="mt-1 block text-[0.85rem] text-ink/55">
+                            {event.location}
+                          </span>
+                        </span>
+                        <ArrowUpRight className="size-4 shrink-0 text-ink/40 transition-transform duration-500 ease-expo group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
           </Reveal>
         </div>
       </div>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, useReducedMotion } from "motion/react";
 import { ArrowUpRight, Check, Mail } from "lucide-react";
+import { subscribeNewsletter } from "../lib/backend";
 
 const words = ["Learn", "Connect", "Work", "Thrive", "Belong"];
 
@@ -9,10 +10,11 @@ export function Newsletter() {
   const [email, setEmail] = useState("");
   const [agreed, setAgreed] = useState(false);
   const [sent, setSent] = useState(false);
+  const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
   const reduce = useReducedMotion();
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setError("Please enter a valid email address.");
@@ -23,6 +25,13 @@ export function Newsletter() {
       return;
     }
     setError("");
+    setPending(true);
+    const result = await subscribeNewsletter(email);
+    setPending(false);
+    if (!result.ok) {
+      setError(result.message);
+      return;
+    }
     setSent(true);
   };
 
@@ -90,9 +99,10 @@ export function Newsletter() {
                     />
                     <button
                       type="submit"
-                      className="group inline-flex items-center justify-between gap-3 rounded-full bg-green py-2 pl-6 pr-2 text-[0.88rem] font-bold text-white transition-colors hover:bg-green-deep"
+                      disabled={pending}
+                      className="group inline-flex items-center justify-between gap-3 rounded-full bg-green py-2 pl-6 pr-2 text-[0.88rem] font-bold text-white transition-colors hover:bg-green-deep disabled:cursor-wait disabled:opacity-70"
                     >
-                      Subscribe
+                      {pending ? "Subscribing…" : "Subscribe"}
                       <span className="grid size-9 place-items-center rounded-full bg-white/15 transition-transform duration-500 ease-expo group-hover:rotate-45">
                         <ArrowUpRight className="size-4" />
                       </span>
@@ -174,7 +184,7 @@ export function Newsletter() {
                   </div>
                 ))}
               </div>
-              <div className="absolute inset-x-6 bottom-6 flex items-center justify-between rounded-xl border border-cream/10 bg-ink/40 px-4 py-3 backdrop-blur-md">
+              <div className="absolute inset-x-6 bottom-6 flex items-center justify-between rounded-xl border border-cream/10 bg-ink/70 px-4 py-3">
                 <p className="text-[0.62rem] font-bold uppercase tracking-[0.2em] text-cream/45">
                   Free · Community-led · Practical
                 </p>

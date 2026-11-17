@@ -51,20 +51,26 @@ const theme = {
 export function Programs() {
   const railRef = useRef<HTMLDivElement>(null);
   const drag = useRef({ down: false, startX: 0, startScroll: 0, moved: false });
+  const frame = useRef(0);
   const [active, setActive] = useState(0);
   const [progress, setProgress] = useState(0);
 
   const update = useCallback(() => {
-    const el = railRef.current;
-    if (!el) return;
-    const max = el.scrollWidth - el.clientWidth;
-    const p = max > 0 ? el.scrollLeft / max : 0;
-    setProgress(p);
-    const card = el.firstElementChild as HTMLElement | null;
-    if (card) {
-      const step = card.offsetWidth + 20;
-      setActive(Math.min(programs.length - 1, Math.round(el.scrollLeft / step)));
-    }
+    if (frame.current) return;
+    frame.current = window.requestAnimationFrame(() => {
+      frame.current = 0;
+      const el = railRef.current;
+      if (!el) return;
+      const max = el.scrollWidth - el.clientWidth;
+      const p = max > 0 ? el.scrollLeft / max : 0;
+      setProgress((prev) => (Math.abs(prev - p) < 0.002 ? prev : p));
+      const card = el.firstElementChild as HTMLElement | null;
+      if (card) {
+        const step = card.offsetWidth + 20;
+        const next = Math.min(programs.length - 1, Math.round(el.scrollLeft / step));
+        setActive((prev) => (prev === next ? prev : next));
+      }
+    });
   }, []);
 
   useEffect(() => {
@@ -74,6 +80,7 @@ export function Programs() {
     el.addEventListener("scroll", update, { passive: true });
     window.addEventListener("resize", update);
     return () => {
+      window.cancelAnimationFrame(frame.current);
       el.removeEventListener("scroll", update);
       window.removeEventListener("resize", update);
     };

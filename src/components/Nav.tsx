@@ -21,10 +21,20 @@ export function Nav() {
   };
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    let frame = 0;
+    const onScroll = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        frame = 0;
+        setScrolled(window.scrollY > 24);
+      });
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
   useEffect(() => {
@@ -178,7 +188,7 @@ export function Nav() {
   return (
     <header className="fixed inset-x-0 top-0 z-50">
       <div
-        className={`transition-all duration-500 ${
+        className={`transition-colors duration-500 ${
           scrolled || open
             ? "border-b border-ink/10 bg-cream/95"
             : "border-b border-transparent bg-transparent"
@@ -198,7 +208,7 @@ export function Nav() {
               <img
                 src="/assets/logo-256.png"
                 alt=""
-                className="size-8.5 object-contain mix-blend-multiply"
+                className="size-8.5 object-contain"
                 width={34}
                 height={34}
               />

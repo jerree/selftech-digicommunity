@@ -5,16 +5,17 @@ import { Action } from "../components/ui/Action";
 import { Eyebrow } from "../components/ui/SectionHeading";
 import { Reveal, RevealLines } from "../components/ui/Reveal";
 import { usePageMeta } from "../lib/usePageMeta";
-import { resources, resourceTopics, type Resource, type ResourceTopicId } from "../lib/site";
+import { resourceTopics, type Resource, type ResourceTopicId } from "../lib/site";
+import { usePublishedResources } from "../lib/content";
 
 type Filter = "all" | ResourceTopicId;
 
 const topicTitle = (id: ResourceTopicId) => resourceTopics.find((t) => t.id === id)?.title ?? id;
-const countFor = (id: ResourceTopicId) => resources.filter((r) => r.topic === id).length;
+const countFor = (list: Resource[], id: ResourceTopicId) => list.filter((r) => r.topic === id).length;
 
 /* ----------------------------------------------------------------- Hero */
 
-function ResourcesHero() {
+function ResourcesHero({ resources }: { resources: Resource[] }) {
   return (
     <section id="top" className="relative overflow-hidden bg-bone pt-[74px]">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
@@ -78,7 +79,7 @@ function ResourcesHero() {
               <ul>
                 {resourceTopics.map((topic) => {
                   const Icon = topic.icon;
-                  const n = countFor(topic.id);
+                  const n = countFor(resources, topic.id);
                   return (
                     <li
                       key={topic.id}
@@ -147,12 +148,20 @@ function ResourceCard({ resource }: { resource: Resource }) {
   );
 }
 
-function Guides({ filter, setFilter }: { filter: Filter; setFilter: (f: Filter) => void }) {
+function Guides({
+  resources,
+  filter,
+  setFilter,
+}: {
+  resources: Resource[];
+  filter: Filter;
+  setFilter: (f: Filter) => void;
+}) {
   const visible = useMemo(
     () => (filter === "all" ? resources : resources.filter((r) => r.topic === filter)),
-    [filter]
+    [resources, filter]
   );
-  const topicsWithGuides = resourceTopics.filter((t) => countFor(t.id) > 0);
+  const topicsWithGuides = resourceTopics.filter((t) => countFor(resources, t.id) > 0);
 
   return (
     <section id="guides" className="relative bg-bone py-16 lg:py-24">
@@ -246,6 +255,7 @@ function ResourcesCta() {
 
 export default function ResourcesPage() {
   const [filter, setFilter] = useState<Filter>("all");
+  const resources = usePublishedResources() ?? [];
 
   usePageMeta(
     "Resources | Selftech DigiCommunity",
@@ -254,8 +264,10 @@ export default function ResourcesPage() {
 
   return (
     <main id="main">
-      <ResourcesHero />
-      {resources.length > 0 && <Guides filter={filter} setFilter={setFilter} />}
+      <ResourcesHero resources={resources} />
+      {resources.length > 0 && (
+        <Guides resources={resources} filter={filter} setFilter={setFilter} />
+      )}
       <ResourcesCta />
     </main>
   );

@@ -198,6 +198,24 @@
   }
 }
 
+.scroll-progress {
+  transform: scaleX(0);
+  animation: scroll-progress linear;
+  animation-timeline: scroll(root);
+}
+
+@keyframes scroll-progress {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@supports not (animation-timeline: scroll()) {
+  .scroll-progress {
+    display: none;
+  }
+}
+
 .marquee-track {
   animation: marquee-x var(--marquee-duration, 38s) linear infinite;
   will-change: transform;

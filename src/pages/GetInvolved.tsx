@@ -5,6 +5,7 @@ import { Eyebrow } from "../components/ui/SectionHeading";
 import { Reveal, RevealLines } from "../components/ui/Reveal";
 import { usePageMeta } from "../lib/usePageMeta";
 import { involvements } from "../lib/site";
+import { submitInvolvement } from "../lib/backend";
 
 type Values = {
   type: string;
@@ -128,6 +129,8 @@ function InvolvedHero({ onStart }: { onStart: () => void }) {
                 alt="Attendees applauding during a community training event"
                 width={1600}
                 height={1067}
+                loading="lazy"
+                decoding="async"
                 className="aspect-[4/3.2] w-full object-cover"
               />
               <figcaption className="absolute bottom-4 left-4 right-4 max-w-[19rem] rounded-2xl bg-ink/90 px-4 py-3 text-cream">
@@ -248,13 +251,16 @@ function InvolvedForm({
 }) {
   const [errors, setErrors] = useState<Errors>({});
   const [done, setDone] = useState<Values | null>(null);
+  const [pending, setPending] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const update = <K extends keyof Values>(key: K, value: Values[K]) => {
     setValues((c) => ({ ...c, [key]: value }));
     setErrors((c) => (c[key] ? { ...c, [key]: undefined } : c));
+    setSubmitError("");
   };
 
-  const submit = (event: React.FormEvent) => {
+  const submit = async (event: React.FormEvent) => {
     event.preventDefault();
     const next: Errors = {};
     if (values.name.trim().length < 2) next.name = "Please enter your full name.";
@@ -270,8 +276,14 @@ function InvolvedForm({
       return;
     }
 
-    // TODO: send `values` to your backend or email service here.
-    // For now the form only validates and shows the confirmation below.
+    setPending(true);
+    setSubmitError("");
+    const result = await submitInvolvement(values);
+    setPending(false);
+    if (!result.ok) {
+      setSubmitError(result.message);
+      return;
+    }
     setDone({ ...values });
   };
 
@@ -443,13 +455,20 @@ function InvolvedForm({
 
                   <button
                     type="submit"
-                    className="mt-7 inline-flex items-center gap-3 rounded-full bg-ink py-1.5 pl-7 pr-1.5 text-[0.98rem] font-semibold text-cream transition-transform hover:-translate-y-0.5"
+                    disabled={pending}
+                    className="mt-7 inline-flex items-center gap-3 rounded-full bg-ink py-1.5 pl-7 pr-1.5 text-[0.98rem] font-semibold text-cream transition-transform hover:-translate-y-0.5 disabled:cursor-wait disabled:opacity-70"
                   >
-                    Send
+                    {pending ? "Sending…" : "Send"}
                     <span className="grid size-10 place-items-center rounded-full bg-white/15">
                       <ArrowUpRight className="size-4" />
                     </span>
                   </button>
+
+                  {submitError && (
+                    <p role="alert" className="mt-4 text-[0.88rem] font-semibold text-[#b03a2e]">
+                      {submitError}
+                    </p>
+                  )}
                 </form>
               )}
             </div>

@@ -14,7 +14,8 @@ import { Action } from "../components/ui/Action";
 import { Eyebrow } from "../components/ui/SectionHeading";
 import { Reveal, RevealLines } from "../components/ui/Reveal";
 import { usePageMeta } from "../lib/usePageMeta";
-import { eventKinds, events, startSteps, type EventKind, type SiteEvent } from "../lib/site";
+import { eventKinds, startSteps, type EventKind, type SiteEvent } from "../lib/site";
+import { usePublishedEvents } from "../lib/content";
 
 type Filter = "All" | EventKind;
 
@@ -86,6 +87,8 @@ function EventsHero() {
                 alt="An attendee asking a question with a microphone during a training session"
                 width={1600}
                 height={1030}
+                loading="lazy"
+                decoding="async"
                 className="aspect-[4/3.2] w-full object-cover"
               />
               <figcaption className="absolute bottom-4 left-4 right-4 max-w-[19rem] rounded-2xl bg-ink/90 px-4 py-3 text-cream">
@@ -283,12 +286,16 @@ function EmptyState({ filter }: { filter: Filter }) {
 
 function Schedule() {
   const [filter, setFilter] = useState<Filter>("All");
+  const events = usePublishedEvents();
   const now = new Date();
   const todayKey = keyOf(now.getFullYear(), now.getMonth(), now.getDate());
 
   const upcoming = useMemo(
-    () => events.filter((e) => e.date >= todayKey).sort((a, b) => a.date.localeCompare(b.date)),
-    [todayKey]
+    () =>
+      (events ?? [])
+        .filter((e) => e.date >= todayKey)
+        .sort((a, b) => a.date.localeCompare(b.date)),
+    [events, todayKey]
   );
   const visible = filter === "All" ? upcoming : upcoming.filter((e) => e.kind === filter);
   const countFor = (f: Filter) =>

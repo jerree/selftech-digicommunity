@@ -1,5 +1,4 @@
-import { useRef } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { ArrowDown, Sparkles } from "lucide-react";
 import { Action } from "./ui/Action";
 import { Marquee } from "./ui/Marquee";
@@ -14,19 +13,10 @@ const ticker = [
 ];
 
 export function Hero() {
-  const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"],
-  });
-
-  const mainY = useTransform(scrollYProgress, [0, 1], [0, 110]);
-  const smallY = useTransform(scrollYProgress, [0, 1], [0, -70]);
-  const badgeY = useTransform(scrollYProgress, [0, 1], [0, 55]);
 
   return (
-    <section id="top" ref={ref} className="relative overflow-hidden bg-bone pt-[74px]">
+    <section id="top" className="relative overflow-hidden bg-bone pt-[74px]">
       <div className="pointer-events-none absolute inset-0">
         <div className="grid-lines absolute inset-0" />
         <div className="absolute -top-40 right-[-10%] size-[38rem] glow [--glow:color-mix(in_oklab,var(--color-blue)_10%,transparent)]" />
@@ -127,7 +117,6 @@ export function Hero() {
                 initial={reduce ? undefined : { opacity: 0, scale: 0.96, y: 24 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 transition={{ duration: 1.1, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                style={reduce ? undefined : { y: mainY }}
                 className="relative z-10 overflow-hidden rounded-[2rem] bg-ink shadow-[0_40px_80px_-40px_rgba(7,23,47,0.55)]"
               >
                 <div className="aspect-[4/5]">
@@ -136,6 +125,7 @@ export function Hero() {
                     alt="Young learners and an educator working together on laptops"
                     className="size-full object-cover"
                     loading="eager"
+                    decoding="async"
                   />
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/10 to-transparent" />
@@ -160,7 +150,6 @@ export function Hero() {
                 initial={reduce ? undefined : { opacity: 0, x: -24 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 1, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                style={reduce ? undefined : { y: smallY }}
                 className="absolute -left-4 -top-4 z-20 w-32 overflow-hidden rounded-2xl border-4 border-bone bg-sand shadow-2xl sm:-left-5 sm:-top-5 sm:w-36"
               >
                 <div className="aspect-[4/3]">
@@ -169,6 +158,7 @@ export function Hero() {
                     alt="A volunteer helping an older woman use a smartphone"
                     className="size-full object-cover"
                     loading="eager"
+                    decoding="async"
                   />
                 </div>
               </motion.div>
@@ -177,7 +167,6 @@ export function Hero() {
                 initial={reduce ? undefined : { opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 0.95, ease: [0.16, 1, 0.3, 1] }}
-                style={reduce ? undefined : { y: badgeY }}
                 className="absolute -right-2 top-8 z-20 w-[12.5rem] rounded-2xl border border-ink/10 bg-cream/95 p-4 shadow-[0_20px_50px_-20px_rgba(7,23,47,0.35)] sm:-right-6"
               >
                 <div className="flex items-center gap-2">

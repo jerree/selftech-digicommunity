@@ -124,6 +124,7 @@ function AboutHero() {
                     alt="A trainer helping an older man use a laptop at a table by a window"
                     className="size-full object-cover transition-transform duration-[1.4s] ease-expo group-hover:scale-[1.04]"
                     loading="eager"
+                    decoding="async"
                   />
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/10 to-transparent" />
