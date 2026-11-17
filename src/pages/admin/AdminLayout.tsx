@@ -11,6 +11,7 @@ import {
   LayoutDashboard,
   LogOut,
   Quote,
+  ShieldCheck,
   Users,
 } from "lucide-react";
 import { isSupabaseConfigured, supabase } from "../../lib/supabase";
@@ -26,6 +27,7 @@ const links = [
   { to: "/admin/resources", label: "Resources", icon: BookOpen },
   { to: "/admin/impact", label: "Impact", icon: BarChart3 },
   { to: "/admin/stories", label: "Stories", icon: Quote },
+  { to: "/admin/admins", label: "Admins", icon: ShieldCheck },
 ];
 
 export default function AdminLayout() {

@@ -27,6 +27,7 @@ const AdminEvents = lazy(() => import("./pages/admin/AdminEvents"));
 const AdminResources = lazy(() => import("./pages/admin/AdminResources"));
 const AdminImpact = lazy(() => import("./pages/admin/AdminImpact"));
 const AdminStories = lazy(() => import("./pages/admin/AdminStories"));
+const AdminAdmins = lazy(() => import("./pages/admin/AdminAdmins"));
 
 export default function App() {
   const { pathname } = useLocation();
@@ -69,6 +70,7 @@ export default function App() {
             <Route path="resources" element={<AdminResources />} />
             <Route path="impact" element={<AdminImpact />} />
             <Route path="stories" element={<AdminStories />} />
+            <Route path="admins" element={<AdminAdmins />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
