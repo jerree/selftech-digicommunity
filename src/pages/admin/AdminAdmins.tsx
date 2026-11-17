@@ -12,6 +12,7 @@ import {
   formatDate,
   formatDateTime,
   inputClass,
+  useConfirm,
 } from "./ui";
 
 type AdminRow = {
@@ -48,6 +49,7 @@ export default function AdminAdmins() {
   const [password, setPassword] = useState("");
   const [pending, setPending] = useState(false);
   const [removingId, setRemovingId] = useState("");
+  const { confirm, dialog } = useConfirm();
 
   const load = useCallback(async () => {
     try {
@@ -85,7 +87,12 @@ export default function AdminAdmins() {
   };
 
   const removeAdmin = async (userId: string) => {
-    if (!window.confirm("Remove this person's admin access and delete their login?")) return;
+    const confirmed = await confirm({
+      title: "Remove admin?",
+      message: "This removes their admin access and deletes their login.",
+      confirmLabel: "Remove",
+    });
+    if (!confirmed) return;
     setRemovingId(userId);
     setError("");
     setNotice("");
@@ -202,6 +209,7 @@ export default function AdminAdmins() {
           </table>
         </div>
       )}
+      {dialog}
     </div>
   );
 }

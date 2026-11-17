@@ -1,3 +1,4 @@
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import type { SubmissionStatus } from "../../lib/db";
 
@@ -164,4 +165,93 @@ export function formatDateTime(value: string) {
     hour: "2-digit",
     minute: "2-digit",
   });
+}
+
+type ConfirmOptions = {
+  title?: string;
+  message: string;
+  confirmLabel?: string;
+};
+
+export function ConfirmDialog({
+  title = "Are you sure?",
+  message,
+  confirmLabel = "Delete",
+  onConfirm,
+  onCancel,
+}: {
+  title?: string;
+  message: string;
+  confirmLabel?: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+}) {
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onCancel();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onCancel]);
+
+  return (
+    <div
+      className="fixed inset-0 z-[80] grid place-items-center bg-ink/45 p-4"
+      onMouseDown={onCancel}
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="confirm-title"
+        className="w-full max-w-sm rounded-2xl border border-ink/10 bg-white p-6 shadow-2xl"
+        onMouseDown={(event) => event.stopPropagation()}
+      >
+        <p
+          id="confirm-title"
+          className="font-display text-[1.15rem] font-semibold tracking-tight text-ink"
+        >
+          {title}
+        </p>
+        <p className="mt-2 text-[0.9rem] leading-relaxed text-ink/60">{message}</p>
+        <div className="mt-6 flex justify-end gap-2">
+          <SecondaryButton type="button" onClick={onCancel} autoFocus>
+            Cancel
+          </SecondaryButton>
+          <DangerButton type="button" onClick={onConfirm}>
+            {confirmLabel}
+          </DangerButton>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function useConfirm() {
+  const [options, setOptions] = useState<ConfirmOptions | null>(null);
+  const resolver = useRef<((value: boolean) => void) | null>(null);
+
+  const confirm = useCallback((next: ConfirmOptions | string) => {
+    setOptions(typeof next === "string" ? { message: next } : next);
+    return new Promise<boolean>((resolve) => {
+      resolver.current = resolve;
+    });
+  }, []);
+
+  const close = (value: boolean) => {
+    resolver.current?.(value);
+    resolver.current = null;
+    setOptions(null);
+  };
+
+  const dialog = options ? (
+    <ConfirmDialog
+      title={options.title}
+      message={options.message}
+      confirmLabel={options.confirmLabel}
+      onConfirm={() => close(true)}
+      onCancel={() => close(false)}
+    />
+  ) : null;
+
+  return { confirm, dialog };
 }

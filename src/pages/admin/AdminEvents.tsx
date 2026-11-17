@@ -14,6 +14,7 @@ import {
   formatDate,
   inputClass,
   selectClass,
+  useConfirm,
 } from "./ui";
 
 type Draft = {
@@ -47,6 +48,7 @@ export default function AdminEvents() {
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   const client = supabase;
+  const { confirm, dialog } = useConfirm();
 
   const load = useCallback(async () => {
     if (!client) return;
@@ -120,7 +122,12 @@ export default function AdminEvents() {
   };
 
   const remove = async (id: string) => {
-    if (!client || !window.confirm("Delete this event permanently?")) return;
+    if (!client) return;
+    const confirmed = await confirm({
+      title: "Delete event?",
+      message: "This event will be permanently deleted.",
+    });
+    if (!confirmed) return;
     const { error: deleteError } = await client.from("events").delete().eq("id", id);
     if (deleteError) {
       setError(deleteError.message);
@@ -284,6 +291,7 @@ export default function AdminEvents() {
           ))}
         </ul>
       )}
+      {dialog}
     </div>
   );
 }

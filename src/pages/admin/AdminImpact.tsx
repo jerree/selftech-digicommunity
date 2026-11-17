@@ -11,6 +11,7 @@ import {
   PrimaryButton,
   SecondaryButton,
   inputClass,
+  useConfirm,
 } from "./ui";
 
 type Draft = {
@@ -29,6 +30,7 @@ export default function AdminImpact() {
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   const client = supabase;
+  const { confirm, dialog } = useConfirm();
 
   const load = useCallback(async () => {
     if (!client) return;
@@ -94,7 +96,12 @@ export default function AdminImpact() {
   };
 
   const remove = async (id: string) => {
-    if (!client || !window.confirm("Delete this impact figure?")) return;
+    if (!client) return;
+    const confirmed = await confirm({
+      title: "Delete figure?",
+      message: "This impact figure will be removed from the website.",
+    });
+    if (!confirmed) return;
     const { error: deleteError } = await client.from("impact_stats").delete().eq("id", id);
     if (deleteError) {
       setError(deleteError.message);
@@ -200,6 +207,7 @@ export default function AdminImpact() {
           ))}
         </ul>
       )}
+      {dialog}
     </div>
   );
 }

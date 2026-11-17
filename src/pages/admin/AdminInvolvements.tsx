@@ -16,6 +16,7 @@ import {
   StatusPill,
   StatusSelect,
   formatDateTime,
+  useConfirm,
 } from "./ui";
 
 const searchText = (row: InvolvementRequest) =>
@@ -26,6 +27,7 @@ export default function AdminInvolvements() {
   const [error, setError] = useState("");
   const [status, setStatus] = useState<StatusFilterValue>("all");
   const client = supabase;
+  const { confirm, dialog } = useConfirm();
 
   const load = useCallback(async () => {
     if (!client) return;
@@ -62,7 +64,12 @@ export default function AdminInvolvements() {
   };
 
   const remove = async (id: string) => {
-    if (!client || !window.confirm("Delete this request permanently?")) return;
+    if (!client) return;
+    const confirmed = await confirm({
+      title: "Delete request?",
+      message: "This request will be permanently deleted.",
+    });
+    if (!confirmed) return;
     const { error: deleteError } = await client
       .from("involvement_requests")
       .delete()
@@ -154,6 +161,7 @@ export default function AdminInvolvements() {
           <Pagination page={page} pageCount={pageCount} onChange={setPage} />
         </div>
       )}
+      {dialog}
     </div>
   );
 }

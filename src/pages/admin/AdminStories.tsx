@@ -12,6 +12,7 @@ import {
   SecondaryButton,
   formatDate,
   inputClass,
+  useConfirm,
 } from "./ui";
 
 type Draft = {
@@ -31,6 +32,7 @@ export default function AdminStories() {
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   const client = supabase;
+  const { confirm, dialog } = useConfirm();
 
   const load = useCallback(async () => {
     if (!client) return;
@@ -98,7 +100,12 @@ export default function AdminStories() {
   };
 
   const remove = async (id: string) => {
-    if (!client || !window.confirm("Delete this story permanently?")) return;
+    if (!client) return;
+    const confirmed = await confirm({
+      title: "Delete story?",
+      message: "This story will be permanently deleted.",
+    });
+    if (!confirmed) return;
     const { error: deleteError } = await client.from("stories").delete().eq("id", id);
     if (deleteError) {
       setError(deleteError.message);
@@ -230,6 +237,7 @@ export default function AdminStories() {
           ))}
         </ul>
       )}
+      {dialog}
     </div>
   );
 }

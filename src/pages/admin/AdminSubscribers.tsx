@@ -11,6 +11,7 @@ import {
   Notice,
   SecondaryButton,
   formatDateTime,
+  useConfirm,
 } from "./ui";
 
 const searchText = (row: Subscriber) => row.email;
@@ -19,6 +20,7 @@ export default function AdminSubscribers() {
   const [rows, setRows] = useState<Subscriber[] | null>(null);
   const [error, setError] = useState("");
   const client = supabase;
+  const { confirm, dialog } = useConfirm();
 
   const load = useCallback(async () => {
     if (!client) return;
@@ -38,7 +40,13 @@ export default function AdminSubscribers() {
   }, [load]);
 
   const remove = async (id: string) => {
-    if (!client || !window.confirm("Remove this subscriber?")) return;
+    if (!client) return;
+    const confirmed = await confirm({
+      title: "Remove subscriber?",
+      message: "They will stop appearing in your subscriber list.",
+      confirmLabel: "Remove",
+    });
+    if (!confirmed) return;
     const { error: deleteError } = await client
       .from("newsletter_subscribers")
       .delete()
@@ -130,6 +138,7 @@ export default function AdminSubscribers() {
           <Pagination page={page} pageCount={pageCount} onChange={setPage} />
         </div>
       )}
+      {dialog}
     </div>
   );
 }

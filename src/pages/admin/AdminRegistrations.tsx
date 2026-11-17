@@ -16,6 +16,7 @@ import {
   StatusPill,
   StatusSelect,
   formatDateTime,
+  useConfirm,
 } from "./ui";
 
 const searchText = (row: Registration) =>
@@ -26,6 +27,7 @@ export default function AdminRegistrations() {
   const [error, setError] = useState("");
   const [status, setStatus] = useState<StatusFilterValue>("all");
   const client = supabase;
+  const { confirm, dialog } = useConfirm();
 
   const load = useCallback(async () => {
     if (!client) return;
@@ -62,7 +64,12 @@ export default function AdminRegistrations() {
   };
 
   const remove = async (id: string) => {
-    if (!client || !window.confirm("Delete this registration permanently?")) return;
+    if (!client) return;
+    const confirmed = await confirm({
+      title: "Delete registration?",
+      message: "This registration will be permanently deleted.",
+    });
+    if (!confirmed) return;
     const { error: deleteError } = await client.from("registrations").delete().eq("id", id);
     if (deleteError) {
       setError(deleteError.message);
@@ -151,6 +158,7 @@ export default function AdminRegistrations() {
           <Pagination page={page} pageCount={pageCount} onChange={setPage} />
         </div>
       )}
+      {dialog}
     </div>
   );
 }
