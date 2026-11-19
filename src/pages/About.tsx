@@ -161,9 +161,9 @@ function Story() {
               <div className="mt-8 flex items-center gap-4 border-t border-ink/10 pt-6">
                 <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-white ring-1 ring-ink/10">
                   <img
-                    src="/assets/logo-256.png"
+                    src="/assets/logo-mark.png"
                     alt=""
-                    className="size-8 object-contain mix-blend-multiply"
+                    className="size-8 object-contain"
                     width={32}
                     height={32}
                   />

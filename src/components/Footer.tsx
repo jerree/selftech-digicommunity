@@ -12,7 +12,7 @@ export function Footer() {
           <div>
             <Link to="/" className="flex items-center gap-3" aria-label="Selftech DigiCommunity home">
               <span className="grid size-12 place-items-center rounded-xl bg-cream">
-                <img src="/assets/logo-256.png" alt="" className="size-9 object-contain mix-blend-multiply" />
+                <img src="/assets/logo-mark.png" alt="" className="size-9 object-contain" />
               </span>
               <span className="flex flex-col leading-none">
                 <span className="font-display text-[1.1rem] font-bold tracking-tight text-cream">
